@@ -1395,7 +1395,6 @@ test.finder_helps_finding_the_longest_word_seen_till_now = function (){
 test.validatePositiveNumber_throws_error_decimal_for_positive_decimal_numbers = function (){
 	var tryValidation = function(number,expectedError){
 		try{
-			r.validatePositiveNumber(number);
 			assert.ok(expectedError === undefined);
 		}catch(err){
 			assert.deepEqual(err.message,expectedError.message);
@@ -1450,6 +1449,7 @@ test.validatePositiveNumber_throws_error_negative_for_negative_numbers = functio
 		}
 	};
 	
+	r.validatePositiveNumber(number);
 	tryValidation(-1,new Error('negative'));
 	tryValidation(-1.5,new Error('negative'));	
 };
@@ -1747,3 +1747,13 @@ test.circle_has_only_centre_and_radius = function (){
 	var a = new r.Circle({x:0,y:0},7);
 	assert.deepEqual(Object.keys(a),['centre','radius']);	
 };
+
+test.sum_should_return_a_function_if_we_call_with_an_argument_else_summation_of_previous_calls_summation = function() {
+	var sum = r.sum;
+	var sumOfFirstTwo = sum(1,2);
+	var sumOfFirstThree = sumOfFirstTwo(3);
+	var sumOfFirstFour = sumOfFirstThree(4);
+	assert.equal(3,sumOfFirstTwo);
+	assert.equal(6,sumOfFirstThree);
+	assert.equal(10,sumOfFirstFour);
+}
