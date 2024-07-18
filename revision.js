@@ -131,5 +131,4 @@ r.Set.prototype.intersection = function (otherSet) {
 };
 
 // Revision 10: Library does not export more than what is needed
-// Explain??
-
+// Just complete the code in 57 functions
