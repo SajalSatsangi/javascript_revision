@@ -132,3 +132,116 @@ r.Set.prototype.intersection = function (otherSet) {
 
 // Revision 10: Library does not export more than what is needed
 // Just complete the code in 57 functions
+
+// Revision 11: accumlater starts with 0
+r.accumulator = class {
+  constructor() {
+    this.value = 0;
+  }
+};
+r.operate = function (obj, method) {
+  return method.call(obj);
+};
+
+// Revision 12: findY give x coordinate of a line only inside
+r.Line.prototype.findY = function (x) {
+  if (x < this.start.x || x > this.end.x) return null;
+  var slope = (this.end.y - this.start.y) / (this.end.x - this.start.x);
+  return this.start.y + slope * (x - this.start.x);
+};
+
+// Revision 13: while performs action as long as condition prevails
+r.while = function (conditionFunction) {
+  return {
+    do(actionFunction) {
+      (function execute() {
+        if (conditionFunction()) {
+          actionFunction();
+          execute();
+        }
+      })();
+    },
+  };
+};
+
+// Revision 14: sort numbers by number of factors they have
+// r.compare.numbers_by_total_factors = function (a, b) {
+//   function countFactors(n) {
+//     let count = 0;
+//     for (let i = 1; i <= Math.sqrt(n); i++) {
+//       if (n % i === 0) {
+//         count += i * i === n ? 1 : 2;
+//       }
+//     }
+//     return count;
+//   }
+//   const factorsA = countFactors(a);
+//   const factorsB = countFactors(b);
+//   return factorsA - factorsB;
+// };
+
+// Revision 15: the numbers are in ascending order
+// r.is = {};
+// r.is.greater_than_previous_number = function (current, index, array) {
+//   if (index === 0) return false;
+//   return current > array[index - 1];
+// };
+
+// Revision 16: findX gives x coordinate for a given y on the line
+r.Line.prototype.findX = function (y) {
+  const slope = (this.end.y - this.start.y) / (this.end.x - this.start.x);
+  if (y < this.start.y || y > this.end.y) return null;
+  return (y - this.start.y) / slope + this.start.x;
+};
+
+// Revision 17: overlapping lines are not parallel
+r.Line.prototype.isParallelTo = function (line) {
+  const slope1 = (this.end.y - this.start.y) / (this.end.x - this.start.x);
+  const slope2 = (line.end.y - line.start.y) / (line.end.x - line.start.x);
+  return slope1 === slope2;
+};
+
+// Revision 18: sets are represented by their elements
+// r.Set.prototype.toString = function () {
+//   if (this.elements.size === 0) {
+//     return "Set{}";
+//   }
+//   const elements = Array.from(this.elements)
+//     .map((e) => `${e}`)
+//     .join("; ");
+//   return `Set{${elements}}`;
+// };
+
+// Revision 19: sort circles by size
+r.Circle = class {
+  constructor(center, radius) {
+    this.center = center;
+    this.radius = radius;
+  }
+};
+r.compare.circles = function (circle1, circle2) {
+  return circle1.radius - circle2.radius;
+};
+
+// Revision 20: readHex reads text as octal
+r.readHex = function (hexString) {
+  return parseInt(hexString, 16);
+};
+
+// Revision 21: lines can be equal
+r.Line.prototype.isEqualTo = function (line) {
+  return (
+    this.start.x === line.start.x &&
+    this.start.y === line.start.y &&
+    this.end.x === line.end.x &&
+    this.end.y === line.end.y
+  );
+};
+
+// Revision 22: reverseText reverses different words with spaces
+r.reverseText = function (text) {
+  return text
+    .split(" ")
+    .map((word) => word.split("").reverse().join(""))
+    .join(" ");
+};
