@@ -245,3 +245,192 @@ r.reverseText = function (text) {
     .map((word) => word.split("").reverse().join(""))
     .join(" ");
 };
+
+// Revision 23: readOctal reads text as octal
+r.readOctal = function (octalString) {
+  return parseInt(octalString, 8);
+};
+
+// Revision 24: two complex numbers can be equal
+r.Complex = class {
+  constructor(real, imaginary) {
+    this.real = real;
+    this.imaginary = imaginary;
+  }
+  isEqualTo(other) {
+    return this.real === other.real && this.imaginary === other.imaginary;
+  }
+  toString() {
+    const imaginarySign = this.imaginary >= 0 ? "+" : "";
+    return `${this.real}${imaginarySign}${this.imaginary}i`;
+  }
+};
+
+// Revision 25: line is uneditable
+// r.Line.prototype.editable = false;
+
+// Revision 26: impose adds item of two equal sized arrays
+// r.impose = function (arr1, arr2) {
+//   if (arr1.length !== arr2.length) {
+//     throw new Error("Arrays must be of equal size");
+//   }
+//   return arr1.map((item, index) => item + arr2[index]);
+// };
+
+// Revision 27: complex numbers can be divided
+r.Complex.prototype["/"] = function (other) {
+  const denominator = other.real ** 2 + other.imaginary ** 2;
+  const realPart =
+    (this.real * other.real + this.imaginary * other.imaginary) / denominator;
+  const imaginaryPart =
+    (this.imaginary * other.real - this.real * other.imaginary) / denominator;
+  return new r.Complex(realPart, imaginaryPart);
+};
+r.Complex.prototype["*"] = function (other) {
+  const realPart = this.real * other.real - this.imaginary * other.imaginary;
+  const imaginaryPart =
+    this.real * other.imaginary + this.imaginary * other.real;
+  return new r.Complex(realPart, imaginaryPart);
+};
+
+// Revision 28: templates don't have any fields
+r.Template = r.Template = class {
+  constructor(templateString) {
+    this.templateString = templateString;
+  }
+};
+
+// Revision 29: templates can be used to prepare formateed text
+r.Template.prototype.apply = function (bag) {
+  return this.templateString.replace(/\d+/g, (match) => bag[parseInt(match)]);
+};
+
+// Revision 30: accumlator starts with a number
+r.accumulator = class {
+  constructor(initialValue = 0) {
+    this.value = initialValue;
+  }
+};
+
+// Revision 31: add data to accumlator
+r.accumulator.prototype.add = function (value) {
+  this.value += value;
+};
+r.operate = function (obj, method, ...args) {
+  return method.apply(obj, args);
+};
+
+// Revision 32: lines parallel to axis are parallel
+r.Line.prototype.isParallelTo = function (line) {
+  const slope1 = (this.end.y - this.start.y) / (this.end.x - this.start.x);
+  const slope2 = (line.end.y - line.start.y) / (line.end.x - line.start.x);
+  return slope1 === slope2;
+};
+
+// Revision 33: do performs action once if condition is not set
+r.do = function (actionFunction) {
+  return {
+    while: function (conditionFunction) {
+      if (!conditionFunction()) {
+        actionFunction();
+      }
+    }
+  };
+};
+
+// Revision 34: resize array does nothing when new size is not given
+r.resizeArray = function (arr, newSize, newValue) {
+  if (newSize === undefined) {
+    return;
+  }
+  if (newSize < arr.length) {
+    arr.length = newSize;
+  } else {
+    for (var i = arr.length; i < newSize; i++) {
+      arr.push(newValue);
+    }
+  }
+};
+
+// Revision 35: do performs action as long as condition prevails
+// r.do = function(actionFunction) {
+//   return {
+//     while: function(conditionFunction) {
+//       function execute() {
+//         if (conditionFunction()) {
+//           actionFunction();
+//           execute();
+//         }
+//       }
+//       execute();
+//     }
+//   };
+// };
+
+// Revision 36: check if point is in circle when moved
+// r.Circle.prototype.moveTo = function (point) {
+//   return new r.Circle(point, this.radius);
+// };
+// r.Circle.prototype.covers = function (point) {
+//   const dx = point.x - this.center.x;
+//   const dy = point.y - this.center.y;
+//   return dx * dx + dy * dy <= this.radius * this.radius;
+// };
+
+// Revision 37: validate Positive Number throws error not a number for string
+r.validatePositiveNumber = function (number) {
+  if (typeof number !== 'number' || isNaN(number)) {
+      throw new Error('not a number');
+  }
+  if (number <= 0) {
+      throw new Error('not a positive number');
+  }
+};
+
+// Revision 38: add 5 increments all Items by 5
+r.add = function (arr) {
+  return arr.map((item) => item + 5);
+};
+
+// Revision 39: resize array adds elements of given object to existing array
+r.resizeArray = function(array, newSize, fillValue) {
+  if (newSize > array.length) {
+      for (let i = array.length; i < newSize; i++) {
+          array[i] = fillValue;
+      }
+  } else if (newSize < array.length) {
+      array.length = newSize;
+  }
+};
+
+// Revision 40: move to moves the rectangle to the new place
+r.Rectangle = class {
+  constructor(position, dimensions) {
+    this.position = position; // [x, y]
+    this.length = dimensions[0];
+    this.width = dimensions[1];
+  }
+  get area() {
+    return this.length * this.width;
+  }
+  get perimeter() {
+    return 2 * (this.length + this.width);
+  }
+  moveTo(newPosition) {
+    return new r.Rectangle(newPosition, [this.length, this.width]);
+  }
+};
+r.createRectangle = function (position, dimensions) {
+  return new r.Rectangle(position, dimensions);
+};
+
+// Revision 41: intesection with a larger set result in smaller set
+// r.Set.prototype.intersection = function (otherSet) {
+//   let result = new r.Set();
+//   for (let elem of this.elements) {
+//     if (otherSet.elements.has(elem)) {
+//       result.elements.add(elem);
+//     }
+//   }
+//   return this.elements.size < otherSet.elements.size ? result : otherSet;
+// };
